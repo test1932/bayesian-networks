@@ -60,8 +60,7 @@ class DiscreteBayesianNetwork(BayesianNetwork):
         
         return self
 
-
-    def mleFit(self, data, IDtoIndexMap):
+    def fitSum(self, data, IDtoIndexMap):
         for node in self._nodes:
             f = sorted(list(node.getParents().keys()))
             for line in data[1:len(data) - 1]:
@@ -70,15 +69,15 @@ class DiscreteBayesianNetwork(BayesianNetwork):
                     nestedDict = nestedDict[line[IDtoIndexMap[key]]]
                 nestedDict[line[IDtoIndexMap[node.getID()]]] += 1
 
+    def mleFit(self, data, IDtoIndexMap):
+        self.fitSum(data, IDtoIndexMap)
         for node in self._nodes:
             node._probs.normalise()
 
     def bayesianFit(self, data, IDtoIndexMap, iss):
+        self.fitSum(data, IDtoIndexMap)
         for node in self._nodes:
-            pass # TODO
-
-        for node in self._nodes:
-            node._probs.normalise() # TODO
+            node._probs.bayesNormalise(iss, len(data) - 1)
     
     @staticmethod
     def DiscreteBayesianFromString(s:str):
@@ -109,5 +108,5 @@ if __name__ == '__main__':
     # ])
 
     survey = list(map(lambda x: x.split(","), open("survey.txt", "r").read().split("\n")))
-    a.fit(survey, method = "mle")
+    a.fit(survey, method = "bayes", iss = 20)
     print(a)
