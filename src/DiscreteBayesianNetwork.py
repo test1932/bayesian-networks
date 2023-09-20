@@ -1,6 +1,5 @@
 from BayesianNetwork import BayesianNetwork
 from LabelledTensor import LabelledTensor
-import numpy as np
 
 class DiscreteBayesianNetwork(BayesianNetwork):
     class DiscreteDAGnode(BayesianNetwork.DAGnode):
@@ -110,3 +109,4 @@ if __name__ == '__main__':
     survey = list(map(lambda x: x.split(","), open("survey.txt", "r").read().split("\n")))
     a.fit(survey, method = "bayes", iss = 20)
     print(a)
+    # print(a.path("A", "S"), a.path("A", "T"))
