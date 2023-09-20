@@ -77,6 +77,9 @@ class BayesianNetwork:
         self.__validMarkov = False
 
     def path(self, startID, endID, blocking = set()):
+        """
+        depth first search for finding connecting paths.
+        """
         startNode = self._nodesDict[startID]
         endNode = self._nodesDict[endID]
         frontier = [*startNode.getPathsTo()]
@@ -85,7 +88,7 @@ class BayesianNetwork:
             del frontier[0]
             if node == endNode:
                 return True
-            frontier = frontier + [*node.getPathsTo()]
+            frontier = [*node.getPathsTo()] + frontier
         return False
 
 
