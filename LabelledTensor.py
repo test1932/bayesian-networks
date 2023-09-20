@@ -35,7 +35,7 @@ class LabelledTensor:
     @staticmethod
     def makeDim(labels):
         if not labels:
-            return 1
+            return 0
         
         dataframe = dict()
         for i in labels[0]:

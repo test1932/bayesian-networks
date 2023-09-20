@@ -1,36 +1,71 @@
 from BayesianNetwork import BayesianNetwork
 from LabelledTensor import LabelledTensor
-import numpy as np
 
 class DiscreteBayesianNetwork(BayesianNetwork):
+    """
+    class for making discrete bayesian networks.
+    """
     class DiscreteDAGnode(BayesianNetwork.DAGnode):
+        """
+        class representing nodes in a discrete bayesian network.
+        """
         def __init__(self, identifier:str, parents:dict):
+            """
+            constructor method for creating discrete distribution nodes.
+            """
             super().__init__(identifier, parents)
             self.__levels = None
             self._probs = None # LabelledTensor
 
         def setLevels(self, levels):
+            """
+            sets the output possibilities of the node.
+            """
             self.__levels = levels
+            return self
 
         def getLevels(self):
+            """
+            getter for the output possibilities of a node.
+            """
             return self.__levels
 
         def setProbs(self, probs):
+            """
+            sets the probability distribution of a node.
+            """
             self._probs = probs
+            return self
 
         def recalculateProbs(self):
-            labels = sorted(list(self._parents.values()), key = lambda x: x.getID())
+            """
+            automatically restructures the probability distribution structure
+            of a node based on its parents' output possibilities.
+            """
+            labels = sorted(list(self._parents.values()), 
+                            key = lambda x: x.getID())
             labels.append(self)
             self._probs = LabelledTensor([i.getLevels() for i in labels])
 
         def __str__(self):
-            return f'{super().__str__() :<20} {str(self.__levels) :<40} {str(self._probs)}'
+            """
+            overridden __str__() method for debugging, also displays
+            probability distribution.
+            """
+            probsStr = str(self._probs)
+            levelStr = str(self.__levels)
+            superStr = super().__str__()
+            return f'{superStr:<20} {levelStr:<40} {probsStr}'
         
     
     def __init__(self, nodes):
+        """
+        constructor for making discrete bayesian networks.
+        """
         super().__init__(nodes)
 
     def setLevels(self, levelPairs):
+        
         for i in levelPairs:
             self._nodesDict[i[0]].setLevels(i[1])
         return self
