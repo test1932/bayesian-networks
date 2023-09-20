@@ -1,5 +1,3 @@
-import random
-
 class BayesianNetwork:
     """
     Class representing Bayesian Network of nodes as a DAG of 
@@ -77,6 +75,22 @@ class BayesianNetwork:
         self._nodes = set(nodes)
         self.__avgMarkovBlanket = None
         self.__validMarkov = False
+
+    def path(self, startID, endID, blocking = set()):
+        """
+        depth first search for finding connecting paths.
+        """
+        startNode = self._nodesDict[startID]
+        endNode = self._nodesDict[endID]
+        frontier = [*startNode.getPathsTo()]
+        while frontier:
+            node = frontier[0]
+            del frontier[0]
+            if node == endNode:
+                return True
+            frontier = [*node.getPathsTo()] + frontier
+        return False
+
 
     def addNode(self, node):
         self._nodes.add(node)
